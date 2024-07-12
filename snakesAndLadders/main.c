@@ -155,32 +155,17 @@ void printBoard(int board[10][10], int p1_pos, int p2_pos) {
 
 			if(board[i][j] < 0) {
 				if(board[i][j] < -100) {
-					if(-1 * (board[i][j] + 100) < 10)
-						printf("\033[31mS0%d%s\033[0m", -1 * (board[i][j] + 100), GAP);
-					else
-						printf("\033[31mS%d%s\033[0m", -1 * (board[i][j] + 100), GAP);
+					printf("\033[31mS%.2d%s\033[0m", -1 * (board[i][j] + 100), GAP);
 				}
 				else{
-					if((-1 * board[i][j]) < 10)
-						printf("\033[32m0L%d\033[0m%s", -1 * board[i][j], GAP);
-					else
-						printf("\033[32mL%d\033[0m%s", -1 * board[i][j], GAP);
+					printf("\033[32mL%.2d\033[0m%s", -1 * board[i][j], GAP);
 				}
 				continue;
 			}
-			if(board[i][j] < 10) {
-				printf("00%d%s", board[i][j], GAP);
-			}
-			else if(board[i][j] < 100) {
-				printf("0%d%s", board[i][j], GAP);
-			}
-			else {
-				printf("%d%s", board[i][j], GAP);
-			}
+			printf("%.3d%s", board[i][j], GAP);
 		}
 		printf("\n\n");
 	}
-
 	printf("\n");
 }
 
@@ -205,18 +190,12 @@ void updatePos(int* p_pos, int dice, struct Snakes snakes[], struct Ladder ladde
 	for(int i=0; i<MAX_LADDERS_AND_SNAKES; i++) {
 		if(*p_pos == snakes[i].head) {
 			*p_pos = snakes[i].tail;
-			if(*p_pos < 10)
-				printf("\033[31mOOPS YOU GOT EATEN BY: 0S%d\033[0m\n", *p_pos);
-			else
-				printf("\033[31mOOPS YOU GOT EATEN BY: S%d\033[0m\n", *p_pos);
+			printf("\033[31mOOPS YOU GOT EATEN BY: S%.2d\033[0m\n", *p_pos);
 			return;
 		}
 		else if(*p_pos == ladders[i].bottom) {
 			*p_pos = ladders[i].top;
-			if(*p_pos < 10)
-				printf("\033[32mNICE! YOU CLIMBED: 0L%d\033[0m\n", *p_pos);
-			else
-				printf("\033[32mNICE! YOU CLIMBED: L%d\033[0m\n", *p_pos);
+			printf("\033[32mNICE! YOU CLIMBED: L%.2d\033[0m\n", *p_pos);
 			return;
 		}
 	}

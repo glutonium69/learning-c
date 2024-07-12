@@ -55,22 +55,18 @@ int main() {
 	initialiseBoard(board, snakes, ladders);
 
 	while(1) {
-		if(p1_turn) {
-			printf("\nPlayer 1 move. Press Enter to roll dice: ");
-		}
-		else {
-			printf("\nPlayer 2 move. Press Enter to roll dice: ");
-		}
+		printf("\nPlayer %d move. Press Enter to roll dice: ", p1_turn ? 1 : 2);
+
 		waitForEnter();
+
 		int dice = rollDice();
-		
 		printf("You rolled a %d\n", dice);
 
 		if(p1_turn) updatePos(&p1_pos, dice, snakes, ladders);
 		else updatePos(&p2_pos, dice, snakes, ladders);
 
 		printf("\nPOSITION:\n");
-		printf("        Player1 pos: %d\n        Player2 pos: %d\n\n", p1_pos, p2_pos);
+		printf("        Player1: %d\n        Player2: %d\n\n", p1_pos, p2_pos);
 
 		if(p1_pos == 100) {
 			printf("\nPlayer 1 wins!\n");
@@ -193,7 +189,7 @@ void updatePos(int* p_pos, int dice, struct Snakes snakes[], struct Ladder ladde
 			printf("\033[31mOOPS YOU GOT EATEN BY: S%.2d\033[0m\n", *p_pos);
 			return;
 		}
-		else if(*p_pos == ladders[i].bottom) {
+		if(*p_pos == ladders[i].bottom) {
 			*p_pos = ladders[i].top;
 			printf("\033[32mNICE! YOU CLIMBED: L%.2d\033[0m\n", *p_pos);
 			return;

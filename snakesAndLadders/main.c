@@ -52,29 +52,20 @@ int main() {
 
 	while(1) {
 		printf("\nPlayer %d move. Press Enter to roll dice: ", p1_turn ? 1 : 2);
-
 		waitForEnter();
 
-		int dice = rollDice();
-		printf("You rolled a %d\n", dice);
-
-		if(p1_turn) p1_pos = updatePos(p1_pos, dice);
-		else p2_pos = updatePos(p2_pos, dice);
+		if(p1_turn) p1_pos = updatePos(p1_pos, rollDice());
+		else p2_pos = updatePos(p2_pos, rollDice());
 
 		printf("\nPOSITION:\n");
 		printf("        Player1: %d\n        Player2: %d\n\n", p1_pos, p2_pos);
 
-		if(p1_pos == 100) {
-			printf("\nPlayer 1 wins!\n");
+		if(p1_pos == 100 || p2_pos == 100) {
+			printf("\nPlayer %d wins!\n", p1_pos == 100 ? 1 : 2);
 			printBoard(board, p1_pos, p2_pos);
 			break;
 		}
-		if(p2_pos == 100) {
-			printf("\nPlayer 2 wins!\n");
-			printBoard(board, p1_pos, p2_pos);
-			break;
-		}
-		
+
 		printBoard(board, p1_pos, p2_pos);
 		p1_turn = !p1_turn;
 	}
@@ -163,7 +154,9 @@ void printBoard(int board[10][10], int p1_pos, int p2_pos) {
 
 int rollDice() {
 	srand(time(NULL));
-	return rand() % 6 + 1;
+	int dice = rand() % 6 + 1;
+	printf("You rolled a %d\n", dice);
+	return dice;
 }
 
 void waitForEnter() {

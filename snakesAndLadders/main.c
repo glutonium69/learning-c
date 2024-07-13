@@ -8,51 +8,47 @@
 struct Snakes {
 	int head;
 	int tail;
+} snakes[MAX_LADDERS_AND_SNAKES] = {
+	{13, 7},
+	{19, 4},
+	{48, 14},
+	{57, 36},
+	{68, 49},
+	{83, 61},
+	{87, 66},
+	{94, 88},
+	{98, 84}
 };
 
 struct Ladder {
 	int bottom;
 	int top;
+} ladders[MAX_LADDERS_AND_SNAKES] = {
+	{6, 24},
+	{10, 12},
+	{11, 33},
+	{20, 38},
+	{40, 59},
+	{45, 54},
+	{64, 78},
+	{72, 91},
+	{86, 96}
 };
 
-void setSnakeOrLadderOrCounter(int counter, int i, int j, int board[10][10], struct Snakes snakes[], struct Ladder ladders[]);
-void initialiseBoard(int board[10][10], struct Snakes snakes[], struct Ladder ladders[]);
+void setSnakeOrLadderOrCounter(int counter, int i, int j, int board[10][10]);
+void initialiseBoard(int board[10][10]);
 void printBoard(int board[10][10], int p1_pos, int p2_pos);
 int rollDice();
 void waitForEnter();
-int updatePos(int pos, int dice, struct Snakes snakes[], struct Ladder ladders[]);
+int updatePos(int pos, int dice);
 
 int main() {
 	int board[10][10];
 	int p1_pos = 0;
 	int p2_pos = 0;
 	int p1_turn = 1;
-	
-	struct Snakes snakes[MAX_LADDERS_AND_SNAKES] = {
-		{13, 7},
-		{19, 4},
-		{48, 14},
-		{57, 36},
-		{68, 49},
-		{83, 61},
-		{87, 66},
-		{94, 88},
-		{98, 84}
-	};
 
-	struct Ladder ladders[MAX_LADDERS_AND_SNAKES] = {
-		{6, 24},
-		{10, 12},
-		{11, 33},
-		{20, 38},
-		{40, 59},
-		{45, 54},
-		{64, 78},
-		{72, 91},
-		{86, 96}
-	};
-
-	initialiseBoard(board, snakes, ladders);
+	initialiseBoard(board);
 
 	while(1) {
 		printf("\nPlayer %d move. Press Enter to roll dice: ", p1_turn ? 1 : 2);
@@ -62,8 +58,8 @@ int main() {
 		int dice = rollDice();
 		printf("You rolled a %d\n", dice);
 
-		if(p1_turn) p1_pos = updatePos(p1_pos, dice, snakes, ladders);
-		else p2_pos = updatePos(p2_pos, dice, snakes, ladders);
+		if(p1_turn) p1_pos = updatePos(p1_pos, dice);
+		else p2_pos = updatePos(p2_pos, dice);
 
 		printf("\nPOSITION:\n");
 		printf("        Player1: %d\n        Player2: %d\n\n", p1_pos, p2_pos);
@@ -85,7 +81,7 @@ int main() {
 	return 0;
 }
 
-void setSnakeOrLadderOrCounter(int counter, int i, int j, int board[10][10], struct Snakes snakes[], struct Ladder ladders[]) {
+void setSnakeOrLadderOrCounter(int counter, int i, int j, int board[10][10]) {
 	for(int k=0; k<MAX_LADDERS_AND_SNAKES; k++) {
 		if(counter == snakes[k].head) {
 			board[i][j] = -(snakes[k].tail + 100);
@@ -99,7 +95,7 @@ void setSnakeOrLadderOrCounter(int counter, int i, int j, int board[10][10], str
 	board[i][j] = counter;
 }
 
-void initialiseBoard(int board[10][10], struct Snakes snakes[], struct Ladder ladders[]) {
+void initialiseBoard(int board[10][10]) {
 	int flip = 0;
 	int counter = 100;
 
@@ -107,14 +103,14 @@ void initialiseBoard(int board[10][10], struct Snakes snakes[], struct Ladder la
 
 		if(flip == 0) {
 			for(int j=0; j<10; j++) {
-				setSnakeOrLadderOrCounter(counter,i,j,board,snakes,ladders);
+				setSnakeOrLadderOrCounter(counter,i,j,board);
 				counter -= 1;
 			}
 			flip = 1;
 		}
 		else if(flip == 1) {
 			for(int j=9; j>=0; j--) {
-				setSnakeOrLadderOrCounter(counter,i,j,board,snakes,ladders);
+				setSnakeOrLadderOrCounter(counter,i,j,board);
 				counter -= 1;
 			}
 			flip = 0;
@@ -177,7 +173,7 @@ void waitForEnter() {
 	} while (c != '\n');
 }
 
-int updatePos(int pos, int dice, struct Snakes snakes[], struct Ladder ladders[]) {
+int updatePos(int pos, int dice) {
 	int new_pos = pos + dice;
 	if(new_pos > 100) {
 		printf("You need %d to win", 100 - pos);
